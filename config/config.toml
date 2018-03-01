@@ -1,0 +1,18 @@
+[redis]
+  [redis.default]
+  addr="localhost:6379"
+  database=7
+  max_idle=5
+  max_active=5
+  idle_timeout="10s"
+
+  [redis.will]
+  addr="localhost:6379"
+  database=12
+  max_idle=5
+  max_active=5
+  idle_timeout="10s"
+
+[rabbitmq]
+  [rabbitmq.default]
+  addr="amqp://guest:guest@localhost:5672/"
