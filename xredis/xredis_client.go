@@ -46,3 +46,18 @@ func (c *Client) Expire(key string, duration time.Duration) error {
 	_, err := c.conn.Do("EXPIRE", key, duration.Seconds())
 	return err
 }
+
+func (c *Client) Lpop(key string) (string, error) {
+	return redis.String(c.conn.Do("LPOP", key))
+}
+
+func (c *Client) Consume(key string, callback interface{}) (){
+	for {
+		msg, _ := c.Lpop(key)
+		if msg == "" {
+			time.Sleep(1*time.Second)
+			continue
+		}
+		go callback.(func(string, string))(key, msg)
+	}
+}
