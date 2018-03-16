@@ -33,8 +33,12 @@ func (c *Client) Hget(key, field string) (string, error) {
 	return redis.String(c.conn.Do("HGET", key, field))
 }
 
-func (c *Client) Hincrby(key, field string, value int) error {
-	_, err := c.conn.Do("HINCRBY", key, field, value)
+func (c *Client) Hincrby(key, field string, value int) (int, error) {
+	return redis.Int(c.conn.Do("HINCRBY", key, field, value))
+}
+
+func (c *Client) Hdel(key, field string) error {
+	_, err := c.conn.Do("HDEL", key, field)
 	return err
 }
 
