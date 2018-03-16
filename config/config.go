@@ -42,18 +42,22 @@ var (
 )
 
 func GetConf() *Config {
-	once.Do(loadConf)
+	once.Do(initConf)
 	return cfg
 }
 
-func loadConf() {
+func initConf() {
 	gopath := os.Getenv("GOPATH")
-	filePath, err := filepath.Abs(fmt.Sprintf("%s/config/gdao/config.toml", gopath))
+	LoadConf(&cfg, fmt.Sprintf("%s/config/gdao/config.toml", gopath))
+}
+
+func LoadConf(c interface{}, path string) {
+	filePath, err := filepath.Abs(path)
 	if err != nil {
 		panic(err)
 	}
 	utils.Infof("parse toml file. filePath: %s\n", filePath)
-	if _, err := toml.DecodeFile(filePath, &cfg); err != nil {
+	if _, err := toml.DecodeFile(filePath, c); err != nil {
 		panic(err)
 	}
 }
