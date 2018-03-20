@@ -61,8 +61,18 @@ func (c *Client) Expire(key string, duration time.Duration) error {
 	return err
 }
 
+func (c *Client) Rpush(key string, value string) error {
+	_, err := c.conn.Do("RPUSH", key, value)
+	return err
+}
+
 func (c *Client) Lpop(key string) (string, error) {
 	return redis.String(c.conn.Do("LPOP", key))
+}
+
+func (c *Client) Sadd(key string, value string) error {
+	_, err := c.conn.Do("SADD", key, value)
+	return err
 }
 
 func (c *Client) Consume(key string, callback interface{}) (){
