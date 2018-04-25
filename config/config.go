@@ -13,7 +13,7 @@ import (
 type Config struct {
 	Redis     map[string]*RedisConf
 	RabbitMQ  map[string]*RmqConf
-	Websocket *WebsocketConf
+	Mysql map[string]*MySqlConf
 }
 
 type duration struct {
@@ -32,14 +32,24 @@ type RmqConf struct {
 	Addr string
 }
 
-type WebsocketConf struct {
-	Port int `toml:"port"`
+type MySqlConf struct {
+	Addr string
+	User string
+	Password string
+	DbName string `toml:"dbname"`
+	MaxIdle int `toml:"max_idle"`
+	MaxOpen int `toml:"max_open"`
 }
 
 var (
 	cfg  *Config
 	once sync.Once
+	confPath = fmt.Sprintf("%s/config/gdao/config.toml", os.Getenv("GOPATH"))
 )
+
+func SetConfPath(path string) {
+	confPath = path
+}
 
 func GetConf() *Config {
 	once.Do(initConf)
@@ -47,8 +57,7 @@ func GetConf() *Config {
 }
 
 func initConf() {
-	gopath := os.Getenv("GOPATH")
-	LoadConf(&cfg, fmt.Sprintf("%s/config/gdao/config.toml", gopath))
+	LoadConf(&cfg, confPath)
 }
 
 func LoadConf(c interface{}, path string) {
