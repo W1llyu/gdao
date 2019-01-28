@@ -64,7 +64,7 @@ func (ch *Channel) createQueue() amqp.Queue {
 		false,
 		nil,
 	)
-	utils.Fatal(err, "Failed to declare a queue")
+	utils.WarnOnError(err, "Failed to declare a queue")
 	return q
 }
 
@@ -76,6 +76,6 @@ func (ch *Channel) bindQueueToExchange(q amqp.Queue, key string) {
 		false,
 		nil,
 	)
-	utils.Fatal(err, "Failed to bind a queue")
+	utils.WarnOnError(err, "Failed to bind a queue")
 	utils.Infof("Bind to Exchange(%s) with key(%s)", ch.ExchangeCtx.Name, key)
 }
