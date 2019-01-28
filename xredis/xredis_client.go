@@ -33,6 +33,11 @@ func (c *Client) Hget(key, field string) (string, error) {
 	return redis.String(c.conn.Do("HGET", key, field))
 }
 
+func (c *Client) Hset(key, field string, value string) error {
+	_, err := c.conn.Do("HSET", key, field, value)
+	return err
+}
+
 func (c *Client) Hincrby(key, field string, value int) (int, error) {
 	return redis.Int(c.conn.Do("HINCRBY", key, field, value))
 }
@@ -59,6 +64,10 @@ func (c *Client) Get(key string) (string, error) {
 func (c *Client) Expire(key string, duration time.Duration) error {
 	_, err := c.conn.Do("EXPIRE", key, duration.Seconds())
 	return err
+}
+
+func (c *Client) Exists(key string) (bool, error) {
+	return redis.Bool(c.conn.Do("EXISTS", key))
 }
 
 func (c *Client) Rpush(key string, value string) error {
